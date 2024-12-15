@@ -123,10 +123,72 @@ This YAML pipeline does the following:
 - Triggers when code is pushed to the main branch.
 - Uses the ubuntu-latest image to run the pipeline.
 - Initializes Terraform, generates a plan, and applies it to deploy the resources.
+  
 3. Service Connection for Azure:
 
 - In the Azure DevOps pipeline settings, configure an Azure service connection to authenticate using the Service Principal created earlier.
 - Go to Project Settings > Service Connections > New Service Connection > Azure Resource Manager.
 - Select Service Principal (automatic) and fill in the details from the Service Principal output (appId, password, tenantId, subscriptionId).
+
+
+## 7. Run the Pipeline
+Once the pipeline is set up, you can trigger it manually or automatically when changes are pushed to the repository.
+
+- When triggered, the pipeline will:
+1.Initialize Terraform to download provider plugins.
+2.Run Terraform Plan to show the execution plan.
+3.Apply the plan to deploy the infrastructure in Azure.
+4.Output the result to show any relevant values.
+
+## 8. Verify Infrastructure in Azure
+
+After the pipeline successfully runs, you can verify that the resources were created by navigating to the Azure Portal and checking the Resource Group where the Virtual Network (or other resources) was created.
+
+## 9. Terraform State Management
+Since Terraform manages the state of infrastructure, it’s recommended to store the Terraform state file in a remote backend, such as Azure Storage, to prevent issues when working in teams.
+
+You can configure a backend in your main.tf:
+
+```yaml
+terraform {
+  backend "azurerm" {
+    resource_group_name   = "rg-terraform"
+    storage_account_name  = "tfstatestorage"
+    container_name        = "tfstate"
+    key                   = "terraform.tfstate"
+  }
+}
+```
+## 10. Optional: Managing Secrets and Variables
+Use Azure Key Vault to store sensitive data such as service principal credentials or other secrets.
+You can also define Terraform variables and pass them through the Azure DevOps Pipeline.
+
+Example for using variables in main.tf:
+
+```hcl
+variable "location" {
+  type    = string
+  default = "East US"
+}
+
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = var.location
+}
+```
+Pass variables from the pipeline:
+
+```yaml
+variables:
+  location: "West US"
+
+```
+
+## 11. Monitor and Manage Pipeline Execution
+- Monitor the pipeline execution in Azure DevOps.
+- Use logs to debug issues during terraform plan and terraform apply.
+- Set up automated alerts or additional steps for monitoring infrastructure after deployment.
+
+
 
 
