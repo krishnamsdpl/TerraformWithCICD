@@ -23,7 +23,8 @@ This command will output JSON containing the details needed for Terraform to aut
 
 3.Save the appId, password, and tenant values from the output for later.
 
-https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal
+Service Principal:https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal
+Built in role RBAC: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 
 ## 3. Set up Azure DevOps Project
  
