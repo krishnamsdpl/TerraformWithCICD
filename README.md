@@ -1,4 +1,4 @@
-# DevOpsWithIACAzureInfra
+# TerraformWithCICD
 
 ## 1. Prerequisites
 Ensure you have the following prerequisites:
